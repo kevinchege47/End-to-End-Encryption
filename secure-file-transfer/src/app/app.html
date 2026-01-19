@@ -1,0 +1,99 @@
+<div class="container">
+  <!-- Header -->
+  <header class="header">
+    <h1 class="title">E2EE Demo</h1>
+    <p class="subtitle">
+      <strong>User:</strong> {{ userId }} | <strong>Org:</strong> {{ orgId }}
+    </p>
+  </header>
+
+
+  <!-- app.html -->
+  @if (!keysLoaded) {
+    <div class="card">
+      <h3>Welcome to E2EE Vault</h3>
+      <p>Choose an option:</p>
+
+      <div class="option">
+        <h4>Create New Account</h4>
+        <input
+          type="password"
+          [(ngModel)]="passphrase"
+          placeholder="Enter strong passphrase"
+        />
+        <button (click)="setupWithPassphrase()">Create & Save</button>
+      </div>
+
+      <div class="option">
+        <h4>Recover Existing Account</h4>
+        <input
+          type="password"
+          [(ngModel)]="passphrase"
+          placeholder="Enter your passphrase"
+        />
+        <button (click)="recoverWithPassphrase()">Recover</button>
+      </div>
+    </div>
+  }
+  <!-- Upload Section -->
+  <section class="upload-section">
+    <!-- Show only on first open or recovery -->
+
+    <div class="file-input-wrapper">
+      <input
+        type="file"
+        id="fileInput"
+        (change)="onFile($event)"
+        class="file-input"
+      />
+      <label for="fileInput" class="file-label">
+        <span class="icon">📎</span> Choose File
+      </label>
+    </div>
+
+    <button
+      (click)="upload()"
+      [disabled]="!selectedFile"
+      class="btn-upload"
+    >
+      @if (!selectedFile) {
+        <span>Select a file to upload</span>
+      } @else {
+        <span>Upload {{ selectedFile.name }}</span>
+      }
+    </button>
+  </section>
+
+  <!-- Files List -->
+  <section class="files-section">
+    <div class="section-header">
+      <h2 class="section-title">Your Files</h2>
+      <button (click)="loadFiles()" class="btn-refresh">
+        <span class="icon">↻</span> Refresh
+      </button>
+    </div>
+
+    @if (files.length > 0) {
+      <ul class="files-list">
+        @for (f of files; track f.id) {
+          <li class="file-item">
+            <div class="file-info">
+              <span class="file-name">{{ f.name }}</span>
+              <span class="file-type">{{ f.type }}</span>
+            </div>
+            <button (click)="download(f.id)" class="btn-download">
+              <span class="icon">↓</span> Download
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-message">No files uploaded yet.</p>
+    }
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>🔒 End-to-End Encrypted | Kenya DPA 2019 Compliant</p>
+  </footer>
+</div>
